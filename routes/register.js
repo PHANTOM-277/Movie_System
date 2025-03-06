@@ -2,9 +2,9 @@ const express = require('express');
 const mongoose = require('mongoose');
 const bcrypt = require('bcrypt');
 const router = express.Router();
-const User = require('./schema/user.js');
+const User = require('../schema/user.js');
 
-router.post('/register/user', async(req,res)=>{
+router.post('/user', async(req,res)=>{
     try{
         const email = req.body.email;
         const password = req.body.password;
@@ -32,3 +32,5 @@ router.post('/register/user', async(req,res)=>{
         return res.status(500).json({msg:"Server Error"});
     }
 });
+
+module.exports = router;
