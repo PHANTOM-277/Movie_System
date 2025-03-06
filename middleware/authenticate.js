@@ -28,6 +28,7 @@ const sessions = (mode)=>{
             }
 
             if(mode === 1 && !user.isAdmin){
+                /* if authentication is for admin and user is not admin */
                 return res.status(403).json({msg:"User is not an admin"});
             }
 

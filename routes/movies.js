@@ -23,7 +23,7 @@ router.get('/info', async(req,res)=>{
 router.post('/admin/new_movie', authenticate(1), async(req,res)=>{
     //this route is only for admin , hence the authenticate(1)
     try{
-
+        //read data from body
     }
     catch(e){
         console.log(`Error in adding new movie : ${e}`);
@@ -41,5 +41,22 @@ router.post('/booking/:id', authenticate(0) , async(req,res)=>{
         res.status(500).json({msg:"Server Error"});
     }
 });
+
+router.delete('/admin/delete_movie/:id', authenticate(1), async(req,res)=>{
+    //allow an admin to delete a movie
+})
+
+router.put('/admin/change_seats/:id', authenticate(1), async(req,res)=>{
+    //allows changing of seats. But if seats given by admin < how many are booked , then not allowed.
+})
+
+router.get('/user_bookings', authenticate(0), async(req,res)=>{
+    try{
+        //basically show the array of bookings , here we will need aggregation maybe
+    }
+    catch(e){
+
+    }
+})
 
 module.exports = router;
