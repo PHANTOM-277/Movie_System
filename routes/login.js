@@ -50,7 +50,7 @@ router.post('/user', async(req,res)=>{
             email : email,
             sessionId : sessionId,
             timeStamp : new Date(),
-            expiresAt : new Date(Date.now() + 10 * 60 * 1000), //two minutes 
+            expiresAt : new Date(Date.now() + 10 * 60 * 1000), //ten minutes 
         });
 
         await new_session.save();//save it in the database
@@ -104,7 +104,7 @@ router.post('/admin', async(req,res)=>{
             email : username,
             sessionId : sessionId,
             timeStamp : new Date(),
-            expiresAt : new Date(Date.now() + 10 * 60 * 1000), //two minutes 
+            expiresAt : new Date(Date.now() + 10 * 60 * 1000), //ten minutes 
             isAdmin : true
         });
 
