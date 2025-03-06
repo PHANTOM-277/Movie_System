@@ -21,6 +21,7 @@ const sessions = async (req,res,next)=>{
         const user = await User.findOne({email:email});
         if(!user){
             /* if the account had a sessionId and then was deleted*/
+            await Session.deleteOne({sessionId:sessionId});//delete it from our database
             return res.status(404).json({msg:"There is no account with this email."});
         }
 
