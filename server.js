@@ -20,5 +20,6 @@ app.use(express.json());
 
 /* routes */
 app.use('/register/', register);
+app.use('/login/user', user_login);
 
 app.listen(port, ()=>console.log(`Up and running on port : ${port}`));
