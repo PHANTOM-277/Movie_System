@@ -105,7 +105,6 @@ router.post('/admin', async(req,res)=>{
             sessionId : sessionId,
             timeStamp : new Date(),
             expiresAt : new Date(Date.now() + 10 * 60 * 1000), //ten minutes 
-            isAdmin : true
         });
 
         await new_session.save();
