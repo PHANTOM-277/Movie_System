@@ -4,6 +4,8 @@ const mongoose = require('mongoose');
 
 /* import routes */
 const register = require('./routes/register');
+const login = require('./routes/login');
+const logout = require('./routes/logout');
 /* get environment variables*/
 const port = process.env.PORT;
 const connection_string = process.env.DBSTRING;
@@ -20,6 +22,7 @@ app.use(express.json());
 
 /* routes */
 app.use('/register/', register);
-app.use('/login/user', user_login);
+app.use('/login/', login);
+app.use('/logout/', logout)
 
 app.listen(port, ()=>console.log(`Up and running on port : ${port}`));
