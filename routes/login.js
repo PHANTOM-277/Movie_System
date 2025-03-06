@@ -35,7 +35,7 @@ router.post('/user', async(req,res)=>{
         const session = await Session.findOne({email:email});
         if(session){
             //if a session already exists , if its expired , delete it
-            if(is_prevSession.expiresAt < new Date()){
+            if(session.expiresAt < new Date()){
                 await Session.deleteOne({email:email});
             }
             else{
@@ -68,8 +68,50 @@ router.post('/admin', async(req,res)=>{
         const username = req.body.username;
         const password = req.body.password;
         if(!username || !password){
-            
+            //no username or password provided
+            return res.status(400).json({msg:"Please provide username and password"});
         }
+        
+        const user = await User.findOne({email:username});
+        if(!user){
+            //no admin with given username
+            return res.status(400).json({msg:"No admin with given username found"});
+        }
+
+        if(!user.isAdmin){
+            //this user is not an admin
+            return res.status(400).json({msg:"Given user is not an admin"});
+        }
+
+        if(!await bcrypt.compare(password,user.password)){
+            return res.status(400).json({msg:"Invalid password"});
+        }
+
+        const session = await Session.findOne({email:username});   
+        if(session){
+            //if a session already exists , if its expired , delete it
+            if(session.expiresAt < new Date()){
+                await Session.deleteOne({email:username});
+            }
+            else{
+                //if its not expired , give the previous sessionId
+                return res.status(400).json({msg:"User already logged in", sessionId:session.sessionId});
+            } 
+        }
+        const sessionId = generateId(username);
+
+        const new_session = new Session({
+            email : username,
+            sessionId : sessionId,
+            timeStamp : new Date(),
+            expiresAt : new Date(Date.now() + 10 * 60 * 1000), //two minutes 
+            isAdmin : true
+        });
+
+        await new_session.save();
+
+        return res.status(200).json({msg:"Admin Login Successful", sessionId:sessionId});
+
     }
     catch(e){
         console.log(`Error in logging in admin : ${e}`);

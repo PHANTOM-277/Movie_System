@@ -11,6 +11,10 @@ const user = new mongoose.Schema({
         type:String,
         required:true
     },
+    isAdmin:{
+        type:Boolean,
+        required:true
+    },
     bookings:[{
         type:mongoose.Schema.Types.ObjectId,
         ref: 'Booking'

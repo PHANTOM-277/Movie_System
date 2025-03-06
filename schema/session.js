@@ -19,6 +19,9 @@ const sessionSchema = new mongoose.Schema({
     },
     expiresAt : {
         type: Date,
+    },
+    isAdmin:{
+        type:Boolean
     }
 });
 

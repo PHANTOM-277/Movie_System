@@ -7,6 +7,7 @@ const cookieParser = require('cookie-parser');
 const register = require('./routes/register');
 const login = require('./routes/login');
 const logout = require('./routes/logout');
+const movies = require('./routes/movies');
 
 /* get environment variables*/
 const port = process.env.PORT;
@@ -26,6 +27,7 @@ app.use(cookieParser());  // parse cookies
 /* routes */
 app.use('/register/', register);
 app.use('/login/', login);
-app.use('/logout/', logout)
+app.use('/logout/', logout);
+app.use('/movies/', movies);
 
 app.listen(port, ()=>console.log(`Up and running on port : ${port}`));

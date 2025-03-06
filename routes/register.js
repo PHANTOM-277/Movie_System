@@ -23,7 +23,8 @@ router.post('/user', async(req,res)=>{
         hashed_password = await bcrypt.hash(password, salt);
         await User.create({
             email:email,
-            password:hashed_password
+            password:hashed_password,
+            isAdmin:false
         });
         return res.status(201).json({msg:"Registered User"});
     }
