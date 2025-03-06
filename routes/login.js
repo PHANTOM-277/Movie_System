@@ -63,4 +63,18 @@ router.post('/user', async(req,res)=>{
     }
 });
 
+router.post('/admin', async(req,res)=>{
+    try{
+        const username = req.body.username;
+        const password = req.body.password;
+        if(!username || !password){
+            
+        }
+    }
+    catch(e){
+        console.log(`Error in logging in admin : ${e}`);
+        res.status(500).json({msg:"Server Error"});
+    }
+})
+
 module.exports = router;

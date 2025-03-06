@@ -7,6 +7,7 @@ const cookieParser = require('cookie-parser');
 const register = require('./routes/register');
 const login = require('./routes/login');
 const logout = require('./routes/logout');
+
 /* get environment variables*/
 const port = process.env.PORT;
 const connection_string = process.env.DBSTRING;
