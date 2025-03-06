@@ -4,7 +4,7 @@ const User = require('../schema/user');
 const sessions = async (req,res,next)=>{
     try{
         const email = req.body.email;
-        const sessionId = req.body.sessionId;
+        const sessionId = req.headers.authorization || req.cookies.sessionId;
         
         if(!email || !sessionId){
             /* if user did not give either*/
@@ -33,7 +33,7 @@ const sessions = async (req,res,next)=>{
             /* if session has expired */
             /* log the user out by deleting the session and ask user to log in */
             await Session.deleteOne({sessionId:sessionId});
-            return res.status(400).json({msg:"Session expired. Please login again"});
+            return res.status(403).json({msg:"Session expired. Please login again"});
         }
         /* if we reached till here , then user has a valid session */
         next(); // go to the next middleware

@@ -7,7 +7,7 @@ router.post('/user', async (req,res)=>{
     /* User must provide sessionId and username for logout*/
     try{
         const email = req.body.email;
-        const sessionIdProvided = req.body.sessionId;
+        const sessionIdProvided = req.headers.authorization || req.cookies.sessionId;;
         if(!email || !sessionIdProvided){
             return res.status(400).json({msg:"Email and SessionId must be given to log out."});
         }
