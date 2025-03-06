@@ -24,6 +24,7 @@ router.post('/admin/new_movie', authenticate(1), async(req,res)=>{
     //this route is only for admin , hence the authenticate(1)
     try{
         //read data from body
+        return res.status(201).json({msg:"done"});
     }
     catch(e){
         console.log(`Error in adding new movie : ${e}`);
