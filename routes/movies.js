@@ -19,4 +19,14 @@ router.get('/info', async(req,res)=>{
     }
 });
 
+router.post('/book/:id', async(req,res)=>{
+    try{
+
+    }
+    catch(e){
+        console.log(`Error in booking movie seat : ${e}`);
+        res.status(500).json({msg:"Server Error"});
+    }
+});
+
 module.exports = router;
