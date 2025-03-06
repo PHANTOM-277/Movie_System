@@ -1,6 +1,7 @@
 /* import libraries*/
 const express = require('express');
 const mongoose = require('mongoose');
+const cookieParser = require('cookie-parser');
 
 /* import routes */
 const register = require('./routes/register');
@@ -18,7 +19,8 @@ mongoose.connect(connection_string)
 const app = express();
 
 /* middleware*/
-app.use(express.json());
+app.use(express.json());  // parse json
+app.use(cookieParser());  // parse cookies
 
 /* routes */
 app.use('/register/', register);
