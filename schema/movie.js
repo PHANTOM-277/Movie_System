@@ -18,6 +18,10 @@ const movie = new mongoose.Schema({
     seatsbooked:{
         type:Number,
         required:true
+    },
+    base_price:{
+        type:Number,
+        required:true
     }
 });
 

@@ -1,6 +1,7 @@
 const express = require('express');
 const mongoose = require('mongoose');
 const Movie = require('../schema/movie');
+const authenticate = require('../middleware/authenticate');
 const router = express.Router();
 
 router.get('/info', async(req,res)=>{
@@ -19,9 +20,21 @@ router.get('/info', async(req,res)=>{
     }
 });
 
-router.post('/book/:id', async(req,res)=>{
+router.post('/admin/new_movie', authenticate(1), async(req,res)=>{
+    //this route is only for admin , hence the authenticate(1)
     try{
 
+    }
+    catch(e){
+        console.log(`Error in adding new movie : ${e}`);
+        res.status(500).json({msg:"Server Error"});
+    }
+});
+
+router.post('/booking/:id', authenticate(0) , async(req,res)=>{
+    //this route is for users , admin can book seats too :)
+    try{
+        //basically try to add the id of the movie into the booking array of user
     }
     catch(e){
         console.log(`Error in booking movie seat : ${e}`);
