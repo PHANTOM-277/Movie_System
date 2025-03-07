@@ -22,6 +22,10 @@ const movie = new mongoose.Schema({
     base_price:{
         type:Number,
         required:true
+    },
+    status:{
+        type:String,
+        required:true
     }
 });
 

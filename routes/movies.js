@@ -58,7 +58,8 @@ router.post('/admin/new_movie', authenticate(1), async(req,res)=>{
             date:parsed_movie_date,
             capacity:movie_capacity,
             seatsbooked:0, //initially 0
-            base_price:movie_base_price
+            base_price:movie_base_price,
+            status:"active"
         });
         await movie.save();//save the document
 
@@ -97,6 +98,11 @@ router.post('/booking/:id/:nseats', authenticate(0) , async(req,res)=>{
             return res.status(404).json({msg:`Movie with id ${id} not found`});
         }
 
+        if(movie.status === "cancelled"){
+            //if movie is cancelled by admin
+            return res.status(400).json({msg:`Movie with id ${id} is cancelled`});
+        }
+
         if (movie.date < new Date()) {
             return res.status(400).json({ msg: `Movie with id ${id} is already over` });
         }
@@ -133,14 +139,6 @@ router.post('/booking/:id/:nseats', authenticate(0) , async(req,res)=>{
     }
 });
 
-router.delete('/admin/delete_movie/:id', authenticate(1), async(req,res)=>{
-    //allow an admin to delete a movie
-})
-
-router.put('/admin/change_seats/:id', authenticate(1), async(req,res)=>{
-    //allows changing of seats. But if seats given by admin < how many are booked , then not allowed.
-})
-
 router.get('/user/bookinghistory', authenticate(0), async(req,res)=>{
     try{
         //basically show the array of bookings 
@@ -148,7 +146,7 @@ router.get('/user/bookinghistory', authenticate(0), async(req,res)=>{
         const bookinghistory = await User.findOne(
             {email:req.user.email},
             {email:1, _id:0, "bookings.nseats":1, "bookings.booked_at":1}
-        ).populate("bookings.movie","name date") //projection on movies  objects in the bookings array elements
+        ).populate("bookings.movie","name date status") //projection on movies  objects , _id and these fields of the movie object will be displayed
 
         if(!bookinghistory || bookinghistory.bookings.length === 0){
             //if no booking history is received . i.e either the user does not exist or bookings array is empty
@@ -163,5 +161,38 @@ router.get('/user/bookinghistory', authenticate(0), async(req,res)=>{
         res.status(500).json({msg:"Server Error"});
     }
 });
+
+router.put('/admin/delete_movie/:id', authenticate(1), async(req,res)=>{
+    //allow an admin to delete a movie
+    /* the idea is that a movie can't be deleted , however its status can be set as cancelled*/
+
+    try{
+        const id = req.params.id;//id of the movie
+        if(!id){
+            //invalid id
+            return res.status(400).json({msg:"Enter a valid id"});
+        }
+        let movie = await Movie.findOne({_id:id});//get the movie document
+        if(!movie){
+            //if there's no such movie
+            return res.status(404).json({msg:`No movie with id:${id} found`});
+        }
+        if(movie.status === "cancelled"){
+            return res.status(400).json({msg:"Movie status is cancelled already."});
+        }
+        movie.status = "cancelled";//set the status to "cancelled".
+        await movie.save(); //save the document
+
+        return res.status(200).json({msg:"movie status changed to cancelled"});
+    }
+    catch(e){
+        console.log(`Error in deleting movie : ${e}`);
+        res.status(500).json({msg:"Server Error"});
+    }
+});
+
+router.put('/admin/change_seats/:id', authenticate(1), async(req,res)=>{
+    //allows changing of seats. But if seats given by admin < how many are booked , then not allowed.
+})
 
 module.exports = router;
