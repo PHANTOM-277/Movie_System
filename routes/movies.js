@@ -8,7 +8,11 @@ const router = express.Router();
 router.get('/info', async(req,res)=>{
     /* endpoint to retrieve all future scheduled movies */
     try{
-        const movies = await Movie.find({date:{$gte:new Date()}});//gets movies which are scheduled after current time. 
+        const movies = await Movie.find({
+            date:{$gte:new Date()} , //gets movies which are scheduled after current time. 
+            status:{$ne:"cancelled"}
+        }).sort({date:1}); //show earliest movies first , note movies which are over are already filtered out
+
         //no point showing user movies which are already finished
         if(movies.length === 0){
             //if no movies are scheduled
@@ -16,6 +20,24 @@ router.get('/info', async(req,res)=>{
         }
         //send all movies
         return res.status(200).json({movies:movies,msg:"To book a movie , use the id sent"});
+    }
+    catch(e){
+        console.log(`Error in displaying available movies : ${e}`);
+        res.status(500).json({msg:"Server Error"});
+    }
+});
+
+router.get('/info/:id', async(req,res)=>{
+    /* endpoint to retrieve info on given movie id */
+    try{
+        const id = req.params.id;
+        const movie = await Movie.findById(id);//gets movie
+        if(!movie){
+            //if no such movie is found
+            return res.status(404).json({msg:"No movies scheduled"});
+        }
+        //send movies
+        return res.status(200).json({movie:movie,msg:"To book a movie , use the id sent"});
     }
     catch(e){
         console.log(`Error in displaying available movies : ${e}`);
@@ -193,6 +215,12 @@ router.put('/admin/delete_movie/:id', authenticate(1), async(req,res)=>{
 
 router.put('/admin/change_seats/:id', authenticate(1), async(req,res)=>{
     //allows changing of seats. But if seats given by admin < how many are booked , then not allowed.
+    try{
+
+    }
+    catch{
+        
+    }
 })
 
 module.exports = router;
