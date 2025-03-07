@@ -22,7 +22,7 @@ const user = new mongoose.Schema({
         },
         movie: {
             type: mongoose.Schema.Types.ObjectId,
-            ref: 'Movie', // Reference to the Movie collection
+            ref: 'movies', // Reference to the Movie collection
             required: true
         },
         booked_at:{

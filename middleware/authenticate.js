@@ -44,6 +44,9 @@ const sessions = (mode)=>{
                 return res.status(403).json({msg:"Session expired. Please login again"});
             }
             /* if we reached till here , then user has a valid session */
+
+            //also add the user object to req to be accessed by other routes/middleware
+            req.user = user;
             next(); // go to the next middleware
         }
         catch(e){

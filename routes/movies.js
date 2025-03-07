@@ -2,6 +2,7 @@ const express = require('express');
 const mongoose = require('mongoose');
 const Movie = require('../schema/movie');
 const authenticate = require('../middleware/authenticate');
+const User = require('../schema/user');
 const router = express.Router();
 
 router.get('/info', async(req,res)=>{
@@ -69,12 +70,62 @@ router.post('/admin/new_movie', authenticate(1), async(req,res)=>{
     }
 });
 
-router.post('/booking/:id', authenticate(0) , async(req,res)=>{
+router.post('/booking/:id/:nseats', authenticate(0) , async(req,res)=>{
     //this route is for users , admin can book seats too :)
     try{
         //basically try to add the id of the movie into the booking array of user
         //so user is logged in , in the bookings section , push the movie in that array
         //also increase the seatsbooked in that movie document
+        const id = req.params.id;
+        const nseats = parseInt(req.params.nseats);
+        if(!id){
+            //if id is invalid
+            return res.status(400).json({msg:"Invalid movie id"});
+        }
+        if(!nseats || isNaN(nseats) || nseats <= 0){
+            //invalid number of seats
+            return res.status(400).json({msg:"Invalid number of seats"});
+        }
+        /* get the user object and the movie object */
+
+        let user = req.user;//this was added during authentication
+
+        
+        let movie = await Movie.findOne({_id:id});
+        if(!movie){
+            //if movie with this id is not found
+            return res.status(404).json({msg:`Movie with id ${id} not found`});
+        }
+
+        if (movie.date < new Date()) {
+            return res.status(400).json({ msg: `Movie with id ${id} is already over` });
+        }
+
+        if (movie.capacity - movie.seatsbooked < nseats) {
+            return res.status(400).json({ msg: `Can't book ${nseats}, seats left: ${movie.capacity - movie.seatsbooked}` });
+        }
+        
+        const updatedMovie = await Movie.findOneAndUpdate(
+            {_id:id, seatsbooked:{$lte:movie.capacity-nseats}, date:{$gt:new Date()}},
+            {$inc : {seatsbooked: nseats}}, //increase it by nseats
+            {new:true}//get the updated doc
+        );
+
+        if(!updatedMovie){
+            //if for some reason we still couldn't book
+            return res.status(400).json({msg:"could not book ticket."});
+        }
+
+        //add the booking in user object by pushing it in the bookings array
+        user.bookings.push({
+            nseats:nseats,
+            movie:updatedMovie._id,
+            booked_at: new Date()
+        });
+        
+        await user.save();
+
+        return res.status(201).json({msg:"Booking made!", booking:user.bookings[user.bookings.length - 1]});
     }
     catch(e){
         console.log(`Error in booking movie seat : ${e}`);
@@ -90,13 +141,27 @@ router.put('/admin/change_seats/:id', authenticate(1), async(req,res)=>{
     //allows changing of seats. But if seats given by admin < how many are booked , then not allowed.
 })
 
-router.get('/user_bookings', authenticate(0), async(req,res)=>{
+router.get('/user/bookinghistory', authenticate(0), async(req,res)=>{
     try{
-        //basically show the array of bookings , here we will need aggregation maybe
-    }
-    catch(e){
+        //basically show the array of bookings 
+        //we already have req.user
+        const bookinghistory = await User.findOne(
+            {email:req.user.email},
+            {email:1, _id:0, "bookings.nseats":1, "bookings.booked_at":1}
+        ).populate("bookings.movie","name date") //projection on movies  objects in the bookings array elements
 
+        if(!bookinghistory || bookinghistory.bookings.length === 0){
+            //if no booking history is received . i.e either the user does not exist or bookings array is empty
+            return res.status(404).json({msg:"No booking history found"});
+        }
+
+        //return bookinghistory
+        res.status(200).json({bookinghistory:bookinghistory});
     }
-})
+    catch(e){   
+        console.log(`Error in retrieving bookinghistory for user ${req.user.email} , ${e}`);
+        res.status(500).json({msg:"Server Error"});
+    }
+});
 
 module.exports = router;
