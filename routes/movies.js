@@ -6,13 +6,14 @@ const router = express.Router();
 
 router.get('/info', async(req,res)=>{
     try{
-        const movies = await Movie.find({date:{$gte:new Date()}});
+        const movies = await Movie.find({date:{$gte:new Date()}});//gets movies which are scheduled after current time. 
+        //no point showing user movies which are already finished
         if(movies.length === 0){
             //if no movies are scheduled
             return res.status(404).json({msg:"No movies scheduled"});
         }
         //send all movies
-        return res.status(200).json({movies:movies});
+        return res.status(200).json({movies:movies,msg:"To book a movie , use the id sent"});
     }
     catch(e){
         console.log(`Error in displaying available movies : ${e}`);
@@ -23,17 +24,17 @@ router.get('/info', async(req,res)=>{
 router.post('/admin/new_movie', authenticate(1), async(req,res)=>{
     //this route is only for admin , hence the authenticate(1)
     try{
-        const { movie_name , movie_date , movie_capacity, movie_base_price } = req.body;
+        const { email, movie_name , movie_date , movie_capacity, movie_base_price } = req.body;
         if(!movie_name || !movie_date || !movie_capacity || !movie_base_price){
             //not enough information
             return res.status(400).json({msg:"Missing Information , please give movie name, date, capacity and base price."});
         }
         const parsed_movie_date = new Date(movie_date);//parse the date given into Date object
-        if (isNaN(parsedDate.getTime())){
+        if (isNaN(parsed_movie_date.getTime())){
             //if invalid date
             return res.status(400).json({ msg: "Invalid date format." });
         }
-        if (movie_date < new Date()){
+        if (parsed_movie_date < new Date()){
             //if this movie date is before now
             return res.status(400).json({ msg: "Movie date must be after current date." });
         }
@@ -57,7 +58,7 @@ router.post('/admin/new_movie', authenticate(1), async(req,res)=>{
             seatsbooked:0, //initially 0
             base_price:movie_base_price
         });
-        await movie.save();
+        await movie.save();//save the document
 
         return res.status(201).json({msg:"created movie.",movie:movie});
     }
