@@ -16,8 +16,19 @@ const user = new mongoose.Schema({
         required:true
     },
     bookings:[{
-        type:mongoose.Schema.Types.ObjectId,
-        ref: 'Booking'
+        nseats:{
+            type:Number,
+            required:true
+        },
+        movie: {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: 'Movie', // Reference to the Movie collection
+            required: true
+        },
+        booked_at:{
+            type: Date,
+            required: true
+        }
     }]
 });
 

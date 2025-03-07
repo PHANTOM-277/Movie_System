@@ -5,6 +5,7 @@ const authenticate = require('../middleware/authenticate');
 const router = express.Router();
 
 router.get('/info', async(req,res)=>{
+    /* endpoint to retrieve all future scheduled movies */
     try{
         const movies = await Movie.find({date:{$gte:new Date()}});//gets movies which are scheduled after current time. 
         //no point showing user movies which are already finished
@@ -72,6 +73,8 @@ router.post('/booking/:id', authenticate(0) , async(req,res)=>{
     //this route is for users , admin can book seats too :)
     try{
         //basically try to add the id of the movie into the booking array of user
+        //so user is logged in , in the bookings section , push the movie in that array
+        //also increase the seatsbooked in that movie document
     }
     catch(e){
         console.log(`Error in booking movie seat : ${e}`);
