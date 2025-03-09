@@ -28,6 +28,10 @@ const user = new mongoose.Schema({
         booked_at:{
             type: Date,
             required: true
+        },
+        isCancelled:{
+            type: Boolean,
+            required:true
         }
     }]
 });

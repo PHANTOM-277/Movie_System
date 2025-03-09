@@ -149,7 +149,8 @@ router.post('/booking/:id/:nseats', authenticate(0) , async(req,res)=>{
         user.bookings.push({
             nseats:nseats,
             movie:updatedMovie._id,
-            booked_at: new Date()
+            booked_at: new Date(),
+            isCancelled: false
         });
         
         await user.save();
@@ -168,7 +169,7 @@ router.get('/user/bookinghistory', authenticate(0), async(req,res)=>{
         //we already have req.user
         const bookinghistory = await User.findOne(
             {email:req.user.email},
-            {email:1, _id:0, "bookings.nseats":1, "bookings.booked_at":1}
+            {email:1, _id:0, "bookings.nseats":1, "bookings.booked_at":1, "bookings.isCancelled":1}
         ).populate("bookings.movie","name date status") //projection on movies  objects , _id and these fields of the movie object will be displayed
 
         if(!bookinghistory || bookinghistory.bookings.length === 0){
