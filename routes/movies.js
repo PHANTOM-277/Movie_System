@@ -81,6 +81,7 @@ router.post('/admin/new_movie', authenticate(1), async(req,res)=>{
             capacity:movie_capacity,
             seatsbooked:0, //initially 0
             base_price:movie_base_price,
+            current_price:movie_base_price,
             status:"active"
         });
         await movie.save();//save the document
@@ -237,11 +238,11 @@ router.put('/admin/change_capacity/:id/:new_seats', authenticate(1), async(req,r
         }
 
         //if we have reached here we can change the number of seats.
-        await Movie.findByIdAndUpdate({id},{$set:{capacity:new_seats}});
+        await Movie.findByIdAndUpdate(id,{$set:{capacity:new_seats}});
 
         res.status(200).json({msg:`Capacity changed to ${new_seats}`});
     }
-    catch{
+    catch(e){
         console.log(`Error in changing capacity : ${e}`);
         res.status(500).json({msg:"Server Error"});
     }
