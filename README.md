@@ -136,3 +136,7 @@ High Demand Pricing:
 ## Postman Link :
 
 https://moviebackend23bce0379.postman.co/workspace/Movie_Backend_23BCE0379~09b52542-b968-4522-85fa-791f9be452c0/collection/39956887-8dd5777a-5192-49e0-8b51-44470d7d9f55?action=share&creator=39956887
+
+## Other notes: 
+
+I have not used docker since I only want to do upto level 2.
