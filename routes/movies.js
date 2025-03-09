@@ -213,13 +213,37 @@ router.put('/admin/delete_movie/:id', authenticate(1), async(req,res)=>{
     }
 });
 
-router.put('/admin/change_seats/:id', authenticate(1), async(req,res)=>{
+router.put('/admin/change_capacity/:id/:new_seats', authenticate(1), async(req,res)=>{
     //allows changing of seats. But if seats given by admin < how many are booked , then not allowed.
     try{
+        const id = req.params.id;
+        const new_seats = parseInt(req.params.new_seats);
+        if(!id){
+            //no id given
+            return res.status(400).json({msg:"No movie id received"});
+        }
+        if(!new_seats || isNaN(new_seats)){
+            //if new_seats is invalid
+            return res.status(400).json({msg:"New seats mentioned is invalid"});
+        }
+        const movie = await Movie.findById(id);//fetch the id
+        if(!movie){
+            //no such movie found
+            return res.status(404).json({msg:`No movie with ${id} found`});
+        }
+        if(movie.seatsbooked > new_seats){
+            //if the no.of seats booked is already greater than new_seats , then change is not allowed
+            return res.status(400).json({msg:`Change not allowed , seats booked already : ${movie.seatsbooked}`});
+        }
 
+        //if we have reached here we can change the number of seats.
+        await Movie.findByIdAndUpdate({id},{$set:{capacity:new_seats}});
+
+        res.status(200).json({msg:`Capacity changed to ${new_seats}`});
     }
     catch{
-        
+        console.log(`Error in changing capacity : ${e}`);
+        res.status(500).json({msg:"Server Error"});
     }
 })
 
