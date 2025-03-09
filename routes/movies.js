@@ -75,6 +75,24 @@ router.post('/admin/new_movie', authenticate(1), async(req,res)=>{
             return res.status(400).json({msg:"A movie with this name already exists."})
         }
         //if we have reached here , we can create the movie document
+        let new_price = movie_base_price;
+        
+        //check if weekend
+        const movieDate = new Date(parsed_movie_date);
+        const dayOfWeek = movieDate.getDay(); // 0 = Sunday, 6 = Saturday
+        if (dayOfWeek === 0 || dayOfWeek === 6) {
+            new_price *= 1.10; // Increase by 10% 
+        }
+
+        //check if peak hours 7pm - 10pm 
+        const movieHour = movieDate.getHours();
+        if (movieHour >= 19 && movieHour < 22) {
+            new_price *= 1.05; // Increase by 5%
+        }
+
+        //since no seats booked now , give 10 % off
+        new_price *= 0.90;
+
         const movie = new Movie({
             name:movie_name,
             date:parsed_movie_date,
@@ -133,10 +151,23 @@ router.post('/booking/:id/:nseats', authenticate(0) , async(req,res)=>{
         if (movie.capacity - movie.seatsbooked < nseats) {
             return res.status(400).json({ msg: `Can't book ${nseats}, seats left: ${movie.capacity - movie.seatsbooked}` });
         }
+
+        let new_price = movie.base_price;
+        //If more than 70% seats booked, increase price by 20%
+        if (movie.seatsbooked + nseats > 0.7 * movie.capacity) {
+            //higher demand movie
+            new_price *= 1.2; // Increase by 20%
+        }
+        else if(movie.seatsbooked + nseats > 0.3*movie.capacity){
+            new_price *= 0.95;
+        }
         
         const updatedMovie = await Movie.findOneAndUpdate(
             {_id:id, seatsbooked:{$lte:movie.capacity-nseats}, date:{$gt:new Date()}},
-            {$inc : {seatsbooked: nseats}}, //increase it by nseats
+            {
+                $inc : {seatsbooked: nseats}, //increase it by nseats
+                $set : {current_price : new_price.toFixed(2)} //set the dynamic price , 2 decimal places
+            }, 
             {new:true}//get the updated doc
         );
 
@@ -155,7 +186,7 @@ router.post('/booking/:id/:nseats', authenticate(0) , async(req,res)=>{
         
         await user.save();
 
-        return res.status(201).json({msg:"Booking made!", booking:user.bookings[user.bookings.length - 1]});
+        return res.status(201).json({msg:"Booking made!", booking:user.bookings[user.bookings.length - 1], amount_paid:movie.current_price});
     }
     catch(e){
         console.log(`Error in booking movie seat : ${e}`);
