@@ -65,14 +65,14 @@ router.post('/user', async(req,res)=>{
 
 router.post('/admin', async(req,res)=>{
     try{
-        const username = req.body.username;
+        const email = req.body.email;
         const password = req.body.password;
-        if(!username || !password){
+        if(!email || !password){
             //no username or password provided
             return res.status(400).json({msg:"Please provide username and password"});
         }
         
-        const user = await User.findOne({email:username});
+        const user = await User.findOne({email:email});
         if(!user){
             //no admin with given username
             return res.status(400).json({msg:"No admin with given username found"});
@@ -87,21 +87,21 @@ router.post('/admin', async(req,res)=>{
             return res.status(400).json({msg:"Invalid password"});
         }
 
-        const session = await Session.findOne({email:username});   
+        const session = await Session.findOne({email:email});   
         if(session){
             //if a session already exists , if its expired , delete it
             if(session.expiresAt < new Date()){
-                await Session.deleteOne({email:username});
+                await Session.deleteOne({email:email});
             }
             else{
                 //if its not expired , give the previous sessionId
                 return res.status(400).json({msg:"User already logged in", sessionId:session.sessionId});
             } 
         }
-        const sessionId = generateId(username);
+        const sessionId = generateId(email);
 
         const new_session = new Session({
-            email : username,
+            email : email,
             sessionId : sessionId,
             timeStamp : new Date(),
             expiresAt : new Date(Date.now() + 10 * 60 * 1000), //ten minutes 
