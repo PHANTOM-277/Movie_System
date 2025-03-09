@@ -153,10 +153,10 @@ router.post('/booking/:id/:nseats', authenticate(0) , async(req,res)=>{
         }
 
         let new_price = movie.base_price;
-        //If more than 70% seats booked, increase price by 20%
+        //If more than 70% seats booked, increase price by 30%
         if (movie.seatsbooked + nseats > 0.7 * movie.capacity) {
             //higher demand movie
-            new_price *= 1.2; // Increase by 20%
+            new_price *= 1.3; // Increase by 30%
         }
         else if(movie.seatsbooked + nseats > 0.3*movie.capacity){
             new_price *= 1.05; //Increase by 5%
