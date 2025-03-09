@@ -249,4 +249,47 @@ router.put('/admin/change_capacity/:id/:new_seats', authenticate(1), async(req,r
     }
 })
 
+router.delete('/delete_booking/:id', authenticate(0), async(req,res)=>{
+    try{
+        //so user is logged in , req.user already contains everything we need
+        //check if the movie with this id is in bookings or not
+        const id = req.params.id;
+        if(!id){
+            //if id is not recieved
+            return res.status(400).json({msg:"booking ID not received"});
+        }
+        let user = req.user;
+        const user_movies = user.bookings;
+        const index = user_movies.findIndex((item)=>item.movie.toString() === id);
+        if(index === -1){
+            //if this movie is not found here
+            return res.status(404).json({msg:"No booking for this movie was made by this user"});
+        }
+        //if it was found , just check if the date is less than now
+        let movie = await Movie.findById(id);
+        if(!movie){
+            //no movie found
+            return res.status(404).json({msg:"No such movie found"});//this should ideally not happen as we are taking care of it above
+        }
+        if(movie.date < new Date()){
+            //cant cancel a movie which is already over
+            return res.status(400).json({msg:"Can't cancel a movie which is already over"});
+        }
+        //now we can actually cancel it
+        
+        user.bookings[index].isCancelled = true;
+        await user.save();
+        //also we should now reduce the seatsbooked for this movie
+        movie.seatsbooked = movie.seatsbooked - user.bookings[index].nseats;
+        await movie.save();
+
+        return res.status(200).json({msg:`Movie of id:${id} cancelled`});
+
+    }
+    catch(e){
+        console.log(`Error in cancelling booking for user : ${req.user.email}, Error : ${e}`);
+        res.status(500).json({msg:"Server Error"});
+    }
+});
+
 module.exports = router;
