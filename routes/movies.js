@@ -260,7 +260,7 @@ router.delete('/delete_booking/:id', authenticate(0), async(req,res)=>{
         }
         let user = req.user;
         const user_movies = user.bookings;
-        const index = user_movies.findIndex((item)=>item.movie.toString() === id && !item.isCancelled);//finds movies with same id where it is not cancelled
+        const index = user_movies.findLastIndex((item)=>item.movie.toString() === id && !item.isCancelled);//finds movies with same id where it is not cancelled
         if(index === -1){
             //if this movie is not found here
             return res.status(404).json({msg:"No booking for this movie was made by this user"});
