@@ -23,6 +23,10 @@ const movie = new mongoose.Schema({
         type:Number,
         required:true
     },
+    current_price:{
+        type:Number,
+        required:true
+    },
     status:{
         type:String,
         required:true
