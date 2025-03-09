@@ -214,7 +214,7 @@ router.put('/admin/delete_movie/:id', authenticate(1), async(req,res)=>{
 });
 
 router.put('/admin/change_capacity/:id/:new_seats', authenticate(1), async(req,res)=>{
-    //allows changing of seats. But if seats given by admin < how many are booked , then not allowed.
+    //allows changing of seats, But if seats given by admin < how many are booked , then not allowed.
     try{
         const id = req.params.id;
         const new_seats = parseInt(req.params.new_seats);
