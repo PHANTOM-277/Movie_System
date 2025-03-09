@@ -1,0 +1,430 @@
+{
+	"info": {
+		"_postman_id": "899a23b2-1d5b-4003-89ea-e3d5c7920cc3",
+		"name": "Movie_Backend_System",
+		"description": "This is a collection",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "39956887"
+	},
+	"item": [
+		{
+			"name": "User Login",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"email\":\"rohit1@hotmail.com\",\r\n    \"password\":\"password1\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "localhost:8000/login/user",
+					"host": [
+						"localhost"
+					],
+					"port": "8000",
+					"path": [
+						"login",
+						"user"
+					]
+				},
+				"description": "this is the user login route,  \nmust specify email and password in the http body"
+			},
+			"response": []
+		},
+		{
+			"name": "Registeration",
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"email\":\"rohit1@hotmail.com\",\r\n    \"password\":\"password1\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "localhost:8000/register/user",
+					"host": [
+						"localhost"
+					],
+					"port": "8000",
+					"path": [
+						"register",
+						"user"
+					]
+				},
+				"description": "This is the user registeration route. "
+			},
+			"response": []
+		},
+		{
+			"name": "Logout ",
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "Cookie",
+						"value": "sessionId=98e42233432cfe91817c549e23b6b2f9294ac2c4143c5e15fb8082f4cda29c2f",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"email\":\"rohit1@hotmail.com\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "localhost:8000/logout/user",
+					"host": [
+						"localhost"
+					],
+					"port": "8000",
+					"path": [
+						"logout",
+						"user"
+					]
+				},
+				"description": "User Logout route , must specify the email in http body and sessionId cookie in the headers."
+			},
+			"response": []
+		},
+		{
+			"name": "Admin Login",
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"username\":\"Admin\",\r\n    \"password\":\"baka\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "localhost:8000/login/admin",
+					"host": [
+						"localhost"
+					],
+					"port": "8000",
+					"path": [
+						"login",
+						"admin"
+					]
+				},
+				"description": "Must specify the \"email\" and \"password\" in http body"
+			},
+			"response": []
+		},
+		{
+			"name": "Admin Add new movie",
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "Cookie",
+						"value": "sessionId=485ce7b45851458d514d5848269c8efb8f2d2fb883b7004beb214f4856c13efc",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"email\":\"Admin\",\r\n    \"movie_name\":\"Spiderman-1\",\r\n    \"movie_date\":\"2025-03-07T14:30:21.292Z\",\r\n    \"movie_capacity\":60,\r\n    \"movie_base_price\":300\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "localhost:8000/movies/admin/new_movie",
+					"host": [
+						"localhost"
+					],
+					"port": "8000",
+					"path": [
+						"movies",
+						"admin",
+						"new_movie"
+					]
+				},
+				"description": "Route for Admin to insert new movies ,  \nmust specify admin email in http body , and sessionId in cookies for authentication.  \nmust specify movie_name , movie_date, movie_capacity, movie_base_price in http body."
+			},
+			"response": []
+		},
+		{
+			"name": "Get scheduled movies",
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "localhost:8000/movies/info",
+					"host": [
+						"localhost"
+					],
+					"port": "8000",
+					"path": [
+						"movies",
+						"info"
+					]
+				},
+				"description": "Returns an array of movie objects for which the date is set after the current time.\n\nAnyone can access this route, no authentication required."
+			},
+			"response": []
+		},
+		{
+			"name": "User Movie booking route",
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "Cookie",
+						"value": "sessionId=8aa155384976069b2265b048d56df123bc2905ac30062698efac76634832fae9",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"email\":\"rohit1@hotmail.com\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "localhost:8000/movies/booking/67cb178bed9fafca609d5adb/10",
+					"host": [
+						"localhost"
+					],
+					"port": "8000",
+					"path": [
+						"movies",
+						"booking",
+						"67cb178bed9fafca609d5adb",
+						"10"
+					]
+				},
+				"description": "User must be logged in , in headers we must have Cookie field with sessionId=\"\" the sessionId provided during login.\n\nThe route url is of form:  \n/movies/booking/:id/:number of seats"
+			},
+			"response": []
+		},
+		{
+			"name": "User Booking History",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "GET",
+				"header": [
+					{
+						"key": "Cookie",
+						"value": "sessionId=c31872cf03d063755977b9e3c4aa51f30f5c284d0a1cada207d2af769b13a7fd",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"email\":\"rohit1@hotmail.com\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "localhost:8000/movies/user/bookinghistory",
+					"host": [
+						"localhost"
+					],
+					"port": "8000",
+					"path": [
+						"movies",
+						"user",
+						"bookinghistory"
+					]
+				},
+				"description": "user must be logged in i.e\n\nadd email in body and Cookie in headers with sessionId = \"\" .  \nGets the user's booking history."
+			},
+			"response": []
+		},
+		{
+			"name": "Movie Cancellation by Admin",
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "PUT",
+				"header": [
+					{
+						"key": "Cookie",
+						"value": "sessionId=765ad9dbc8b16aafc0b5231b9ec0897e61dd951d0327eadb20cb2cc945eed0fa",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"email\":\"Admin\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "localhost:8000/movies/admin/delete_movie/67cb178bed9fafca609d5adb",
+					"host": [
+						"localhost"
+					],
+					"port": "8000",
+					"path": [
+						"movies",
+						"admin",
+						"delete_movie",
+						"67cb178bed9fafca609d5adb"
+					]
+				},
+				"description": "Admin authentication needed i.e\n\nemail as Admin username in http body , Cookie in header with given sessionId\n\nMovie's status is set to \"cancelled\" , users cannot book seats for a movie for which status is \"cancelled\"."
+			},
+			"response": []
+		},
+		{
+			"name": "Get information on a particular movie by id",
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "localhost:8000/movies/info/67cb178bed9fafca609d5adb",
+					"host": [
+						"localhost"
+					],
+					"port": "8000",
+					"path": [
+						"movies",
+						"info",
+						"67cb178bed9fafca609d5adb"
+					]
+				},
+				"description": "No authentication needed for this route.\n\nmovies/info/:id  \ngets the information of a given movie even if its over or cancelled."
+			},
+			"response": []
+		},
+		{
+			"name": "Admin Change capacity of movie",
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "PUT",
+				"header": [
+					{
+						"key": "Cookie",
+						"value": "sessionId=d68eb422d8e0752d83c166bd6b15a9eee2b782c66096cd9dbb03397df0cc1b9f",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"email\":\"Admin\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "localhost:8000/movies/admin/change_capacity/67cd1efd9e3e418480daabe3/70",
+					"host": [
+						"localhost"
+					],
+					"port": "8000",
+					"path": [
+						"movies",
+						"admin",
+						"change_capacity",
+						"67cd1efd9e3e418480daabe3",
+						"70"
+					]
+				},
+				"description": "Admin Authentication needed , email as admin username in http body and cookie sessionId.  \nAllows admin change the capacity of a movie.  \n/change/:id/:new_seats"
+			},
+			"response": []
+		},
+		{
+			"name": "Delete booking for uers",
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "DELETE",
+				"header": [
+					{
+						"key": "Cookie",
+						"value": "sessionId=36b36c9d9402cb7bb02d59ca15fabd22f55f81945480cebb264c4e480a00889d",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"email\":\"rohit1@hotmail.com\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "localhost:8000/movies/delete_booking/67cd1efd9e3e418480daabe3",
+					"host": [
+						"localhost"
+					],
+					"port": "8000",
+					"path": [
+						"movies",
+						"delete_booking",
+						"67cd1efd9e3e418480daabe3"
+					]
+				},
+				"description": "Lets user delete a booking for a movie using the id."
+			},
+			"response": []
+		}
+	]
+}
