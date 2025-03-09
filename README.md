@@ -116,6 +116,7 @@ Description: Allows an admin to add a new movie.
     Description: Cancels a booking but does not delete it (marks isCancelled: true).
 
 Find further Details on required parameters / http body / cookies in the postman collection.
+
 ## Dynamic Pricing
 
 Movie ticket prices change dynamically based on:
@@ -132,6 +133,8 @@ High Demand Pricing:
 
 +30% if more than 70% of seats booked
 
+ Instead of making a separate simulation endpoint , I have encorporated the above in other routes itself. It checks if 70% seats
+ are booked when a new booking happens . And other conditions such as weekend , peak hours etc , are checked when admin adds a new movie.
 
 ## Postman Link :
 
