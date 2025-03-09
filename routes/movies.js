@@ -159,7 +159,7 @@ router.post('/booking/:id/:nseats', authenticate(0) , async(req,res)=>{
             new_price *= 1.2; // Increase by 20%
         }
         else if(movie.seatsbooked + nseats > 0.3*movie.capacity){
-            new_price *= 0.95;
+            new_price *= 1.05; //Increase by 5%
         }
         
         const updatedMovie = await Movie.findOneAndUpdate(
