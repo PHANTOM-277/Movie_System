@@ -54,7 +54,7 @@ router.post('/user', async(req,res)=>{
         });
 
         await new_session.save();//save it in the database
-
+        res.cookie("sessionId", sessionId, { httpOnly: true, sameSite: "Lax" });//for browser to store
         return res.status(200).json({msg:"Login Successful", sessionId:sessionId}); 
     }
     catch(e){
