@@ -65,7 +65,7 @@ router.post('/user', async(req,res)=>{
 
 router.post('/admin', async(req,res)=>{
     try{
-        const email = req.body.email;
+        const email = req.body.username;
         const password = req.body.password;
         if(!email || !password){
             //no username or password provided
