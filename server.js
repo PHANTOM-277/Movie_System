@@ -23,7 +23,9 @@ const app = express();
 
 /* middleware*/
 
-app.use(cors()); // to allow frontend on different port to access the backend .
+app.use(cors({
+    credentials: true, // Allow sending cookies with requests
+}));// to allow frontend on different port to access the backend .
 app.use(express.json());  // parse json
 app.use(cookieParser());  // parse cookies
 
