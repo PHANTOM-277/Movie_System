@@ -40,7 +40,7 @@ router.post('/user', async(req,res)=>{
             }
             else{
                 //if its not expired , give the previous sessionId
-                return res.status(400).json({msg:"User already logged in", sessionId:session.sessionId});
+                return res.status(200).json({msg:"User already logged in", sessionId:session.sessionId});
             } 
         }
         //check if its
