@@ -2,6 +2,7 @@
 const express = require('express');
 const mongoose = require('mongoose');
 const cookieParser = require('cookie-parser');
+const cors = require('cors');
 
 /* import routes */
 const register = require('./routes/register');
@@ -21,6 +22,8 @@ mongoose.connect(connection_string)
 const app = express();
 
 /* middleware*/
+
+app.use(cors()); // to allow frontend on different port to access the backend .
 app.use(express.json());  // parse json
 app.use(cookieParser());  // parse cookies
 
