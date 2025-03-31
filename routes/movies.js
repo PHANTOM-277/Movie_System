@@ -48,8 +48,8 @@ router.get('/info/:id', async(req,res)=>{
 router.post('/admin/new_movie', authenticate(1), async(req,res)=>{
     //this route is only for admin , hence the authenticate(1)
     try{
-        const { email, movie_name , movie_date , movie_capacity, movie_base_price } = req.body;
-        if(!movie_name || !movie_date || !movie_capacity || !movie_base_price){
+        const { email, movie_name , movie_date , movie_capacity, movie_base_price, movie_img_URL } = req.body;
+        if(!movie_name || !movie_date || !movie_capacity || !movie_base_price || movie_img_URL){
             //not enough information
             return res.status(400).json({msg:"Missing Information , please give movie name, date, capacity and base price."});
         }
@@ -100,6 +100,7 @@ router.post('/admin/new_movie', authenticate(1), async(req,res)=>{
             seatsbooked:0, //initially 0
             base_price:movie_base_price,
             current_price:movie_base_price,
+            image_URL:movie_img_URL,
             status:"active"
         });
         await movie.save();//save the document

@@ -19,6 +19,10 @@ const movie = new mongoose.Schema({
         type:Number,
         required:true
     },
+    image_URL:{
+        type:String,
+        required:true
+    },
     base_price:{
         type:Number,
         required:true
