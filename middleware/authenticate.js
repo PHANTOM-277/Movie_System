@@ -5,7 +5,7 @@ const sessions = (mode)=>{
     //mode = 1 means authentication for admin , mode != 1 is authentication for users
     return async (req,res,next)=>{
         try{
-            const email = req.body.email || req.query.email;
+            const email = req.body.email || req.query.email; // allowing query for GET requests
             const sessionId = req.headers.authorization || req.cookies.sessionId;
             
             if(!email || !sessionId){

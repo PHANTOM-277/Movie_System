@@ -203,7 +203,7 @@ router.get('/user/bookinghistory', authenticate(0), async(req,res)=>{
         const bookinghistory = await User.findOne(
             {email:req.user.email},
             {email:1, _id:0, "bookings.nseats":1, "bookings.booked_at":1, "bookings.isCancelled":1}
-        ).populate("bookings.movie","name date status") //projection on movies  objects , _id and these fields of the movie object will be displayed
+        ).populate("bookings.movie","name date status image_URL") //projection on movies  objects , _id and these fields of the movie object will be displayed
 
         if(!bookinghistory || bookinghistory.bookings.length === 0){
             //if no booking history is received . i.e either the user does not exist or bookings array is empty
