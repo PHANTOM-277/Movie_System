@@ -207,7 +207,9 @@ router.get('/user/bookinghistory', authenticate(0), async(req,res)=>{
 
         if(!bookinghistory || bookinghistory.bookings.length === 0){
             //if no booking history is received . i.e either the user does not exist or bookings array is empty
-            return res.status(404).json({msg:"No booking history found"});
+            return res.status(200).json({msg:"No booking history found",bookinghistory:{
+                bookings:[]
+            }});
         }
 
         //return bookinghistory
